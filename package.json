@@ -6,8 +6,8 @@
   "author": "EVRYTHNG",
   "license": "Apache-2.0",
   "repository": {
-  	"type": "git",
-  	"url": "https://github.com/evrythng/evrythng-cli-plugin-upc-import.git"
+    "type": "git",
+    "url": "https://github.com/evrythng/evrythng-cli-plugin-upc-import.git"
   },
   "dependencies": {
     "request": "^2.88.0"
