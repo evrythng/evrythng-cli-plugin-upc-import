@@ -1,6 +1,6 @@
 {
   "name": "evrythng-cli-plugin-upc-lookup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Example plugin for the EVRYTHNG CLI that uses the barcodelookup.com API.",
   "main": "index.js",
   "author": "EVRYTHNG",
