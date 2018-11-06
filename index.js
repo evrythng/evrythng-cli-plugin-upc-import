@@ -99,14 +99,14 @@ module.exports = (api) => {
   // The standard command structure
   const command = {
     about: 'Create a product from UPC, via the upcitemdb.com API.',
-    firstArg: 'upc-import',
+    firstArg: 'upc-lookup',
     operations: {
-      lookup: {
+      find: {
         execute: async ([, barcode]) => {
           const res = await lookup(barcode);
           console.log(JSON.stringify(res.items, null, 2));
         },
-        pattern: 'lookup $upc',
+        pattern: 'find $upc',
       },
       create: {
         execute: async ([, barcode]) => {
