@@ -1,7 +1,8 @@
 # evrythng-cli-plugin-upc-lookup
 
 Example plugin for the [EVRYTHNG CLI](https://github.com/evrythng/evrythng-cli) 
-showing how to create a product using a UPC code via the barcodelookup.com API.
+showing how to create a product using a UPC code via the barcodelookup.com API
+with their user key.
 
 
 ## Usage
@@ -16,13 +17,15 @@ $ npm i -g evrythng-cli-plugin-upc-lookup
 Then, use the `upc-lookup` command to either look up data for a UPC code:
 
 ```
-$ evrythng upc-lookup find 040000004356
+$ evrythng upc-lookup find $upc $user-key
 ```
+
+> If no $user-key is supplied, the trial API is used instead.
 
 or to directly create an EVRYTHNG product:
 
 ```
-$ evrythng upc-lookup create 040000004356
+$ evrythng upc-lookup create $upc $user-key
 ```
 ```
 {

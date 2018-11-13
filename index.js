@@ -8,28 +8,41 @@ const request = require('request');
 let cli;
 
 /**
- * Use the upcitemdb.com API to look up a UPC code.
+ * Use the upcitemdb.com API to look up a UPC code. If no userKey is supplied, use the trial API.
  *
  * @param {string} upc - The UPC barcode value to lookup.
+ * @param {string} userKey - The user's API key, if required.
  * @returns {Promise} A Promise that resolves when the API request completes.
  */
-const lookup = async (upc) => {
+const lookup = async (upc, userKey) => {
   if (!upc) {
     throw new Error('$upc must be specified.');
   }
 
+  const opts = {
+    url: 'https://api.upcitemdb.com/prod/trial/lookup',
+    qs: { upc },
+  };
+
+  if (userKey && userKey.length) {
+    opts.url = 'https://api.upcitemdb.com/prod/v1/lookup';
+    opts.headers = {
+      user_key: userKey,
+      key_type: '3scale',
+    };
+  }
+
   return new Promise((resolve, reject) => {
-    request.get({
-      url: 'https://api.upcitemdb.com/prod/trial/lookup',
-      qs: { upc },
-    }, (err, response, body) => {
+    request.get(opts, (err, response, body) => {
       if (err) {
         reject(err);
         return;
       }
 
       // The trial API is used
-      console.log(`${response.headers['x-ratelimit-remaining']} free requests to api.upcitemdb.com remain for today.`);
+      if (response.headers['x-ratelimit-remaining']) {
+        console.log(`${response.headers['x-ratelimit-remaining']} free requests to api.upcitemdb.com remain for today.`);
+      }
       
       // Handle reply from upcitemdb API
       const json = JSON.parse(body);
@@ -102,18 +115,20 @@ module.exports = (api) => {
     firstArg: 'upc-lookup',
     operations: {
       find: {
-        execute: async ([, barcode]) => {
-          const res = await lookup(barcode);
+        execute: async ([, barcode, userKey]) => {
+          const res = await lookup(barcode, userKey);
           console.log(JSON.stringify(res.items, null, 2));
         },
         pattern: 'find $upc',
+        helpPattern: 'find $upc [$user-key]',
       },
       create: {
-        execute: async ([, barcode]) => {
-          const res = await lookup(barcode);
+        execute: async ([, barcode, userKey]) => {
+          const res = await lookup(barcode, userKey);
           await createProduct(res);
         },
         pattern: 'create $upc',
+        helpPattern: 'find $upc [$user-key]',
       }
     },
   };
